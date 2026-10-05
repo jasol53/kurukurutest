@@ -41,3 +41,14 @@
 .compatItem{display:block;margin:0 0 12px;line-height:1.5}
 .compatItem b{display:inline;font-size:15px;color:#f2f2f2}
 .compatItem span{display:inline;font-size:13px;line-height:1.5;color:#a9a9a9;font-weight:400}
+
+.answer,.answer:hover,.answer:focus,.answer:focus-visible,.answer:active{
+ outline:none!important;box-shadow:none!important;
+ -webkit-tap-highlight-color:transparent!important;
+ -webkit-appearance:none!important;appearance:none!important;
+}
+@media (hover:none) and (pointer:coarse){
+ .answer,.answer:hover,.answer:focus,.answer:focus-visible,.answer:active{
+  outline:none!important;box-shadow:none!important;transform:none!important;
+ }
+}
