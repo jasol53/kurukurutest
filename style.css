@@ -12,3 +12,32 @@
 .compatItem:last-child{margin-bottom:0}
 .compatItem b{display:block;margin-bottom:4px;font-size:16px}
 .compatItem span{display:block;font-size:13px;line-height:1.45;color:#a9a9a9;font-weight:400}
+
+/* iOS Safari: 이전에 탭한 답변의 focus/active 테두리 잔상 제거 */
+.answer {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.answer:focus,
+.answer:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+/* 키보드 사용자는 포커스를 볼 수 있게 유지 */
+.answer:focus-visible {
+  outline: 2px solid currentColor !important;
+  outline-offset: 2px;
+}
+@media (hover: none) and (pointer: coarse) {
+  .answer:focus,
+  .answer:focus-visible,
+  .answer:active {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.compatList{margin-top:10px}
+.compatItem{display:block;margin:0 0 12px;line-height:1.5}
+.compatItem b{display:inline;font-size:15px;color:#f2f2f2}
+.compatItem span{display:inline;font-size:13px;line-height:1.5;color:#a9a9a9;font-weight:400}
