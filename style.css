@@ -52,3 +52,9 @@
   outline:none!important;box-shadow:none!important;transform:none!important;
  }
 }
+
+/* hide resume panel unless there is saved data */
+[hidden]{display:none!important}
+#resumeArea{border-color:#666}
+#resumeArea .secondary{margin-top:9px}
+#shareStatus{min-height:20px}
