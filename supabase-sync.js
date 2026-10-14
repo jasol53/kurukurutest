@@ -3,10 +3,14 @@ const KURU_URL='https://xcgawzmxepgcvremobnt.supabase.co';
 const KURU_KEY='sb_publishable_V15kk2WL2o4iDakSXA-cjQ_uMzxzKeR';
 const kuruDb=window.supabase?.createClient(KURU_URL,KURU_KEY);
 const $k=id=>document.getElementById(id);
-function kuruInvite(){return new URLSearchParams(location.search).get('invite')||$k('inviteCode')?.value.trim()||localStorage.getItem('kuru-invite-v5')||''}
 function kuruStatus(message){if($k('syncStatus'))$k('syncStatus').textContent=message;if($k('groupStatus'))$k('groupStatus').textContent=message}
 async function kuruSession(){if(!kuruDb)throw new Error('Supabase 라이브러리를 불러오지 못했습니다.');const {data:{session},error:e}=await kuruDb.auth.getSession();if(e)throw e;if(session)return session.user;const {data,error}=await kuruDb.auth.signInAnonymously();if(error)throw error;return data.user}
-async function kuruMember(name){const auth=await kuruSession();const {data:existing,error:e}=await kuruDb.from('kuru_members').select('group_id,display_name').eq('user_id',auth.id).maybeSingle();if(e)throw e;if(existing)return {userId:auth.id,groupId:existing.group_id};const invite=kuruInvite();if(!invite)throw new Error('그룹 초대코드가 필요합니다.');const {data:groupId,error}=await kuruDb.rpc('kuru_join_group',{p_invite_code:invite,p_display_name:name});if(error)throw error;localStorage.setItem('kuru-invite-v5',invite);return {userId:auth.id,groupId};}
+async function kuruMember(name){
+ const auth=await kuruSession();
+ const {data:groupId,error}=await kuruDb.rpc('kuru_join_default_group',{p_display_name:name});
+ if(error)throw error;
+ return {userId:auth.id,groupId};
+}
 async function kuruSaveAndCompare(name,scores){
  const target=$k('groupChemistry');if(!target)return;
  target.replaceChildren();kuruStatus('그룹 결과를 저장하고 있어요...');
@@ -24,6 +28,5 @@ async function kuruSaveAndCompare(name,scores){
   const categories=[['찰떡궁합','good','서로의 역할을 보완하는 조합'],['불꽃 케미','fire','장난과 반응이 활발할 조합'],['충돌 가능성','risk','의견이나 장난이 부딪힐 수 있는 조합']];
   categories.forEach(([label,key,desc])=>{const top=[...others].sort((a,b)=>b[key]-a[key])[0];const row=document.createElement('div');row.className='compatItem';const strong=document.createElement('b');strong.textContent=`${label} · ${top.name}`;const span=document.createElement('span');span.textContent=` — ${desc}`;row.append(strong,span);target.append(row)});
   kuruStatus(`저장 완료 · 같은 그룹의 V5 참여자 ${results.length}명`);
- }catch(e){console.error('KURU sync error',e);kuruStatus('기기에는 결과가 저장됐지만 서버 저장에 실패했어요: '+(e.message||String(e)));target.textContent='그룹 결과를 불러오지 못했습니다. 초대코드와 Supabase 설정을 확인해 주세요.'}
+ }catch(e){console.error('KURU sync error',e);kuruStatus('기기에는 결과가 저장됐지만 서버 저장에 실패했어요: '+(e.message||String(e)));target.textContent='그룹 결과를 불러오지 못했습니다. Supabase 설정을 확인해 주세요.'}
 }
-if($k('inviteCode')){$k('inviteCode').value=new URLSearchParams(location.search).get('invite')||localStorage.getItem('kuru-invite-v5')||'';}
