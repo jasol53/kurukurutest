@@ -1,5 +1,5 @@
 let user="",cur=0,picks=Array(72).fill(null),best="",worst="";const $=x=>document.getElementById(x);
-const SAVE_KEY="kurukuru-character-test-v5";
+const SAVE_KEY="kurukuru-character-test-v5-natural-1";
 let currentPage="start";
 function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({version:5,user,cur,picks,best,worst,currentPage,consent:!!$("privacyConsent")?.checked,updatedAt:Date.now()}))}catch(e){console.warn("저장할 수 없습니다",e)}}
 function readProgress(){try{const v=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");if(!v||v.version!==5||!Array.isArray(v.picks)||v.picks.length!==72)return null;return v}catch(e){return null}}
